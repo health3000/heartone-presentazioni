@@ -12,7 +12,9 @@
   html, body { margin: 0; height: 100%; background: #01238B; }
   iframe { border: 0; width: 100%; height: 100%; display: block; }
   #stato {
-    position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    position: fixed; left: 50%; top: calc(12px + env(safe-area-inset-top, 0px));
+    pointer-events: none; /* i tocchi passano ai pulsanti della presentazione */
+    transition: opacity .4s;
     transform: translateX(-50%);
     background: #01238B; color: #fff; border: 2px solid #EF2F7E;
     font: 500 14px/1.3 "Encode Sans", Arial, sans-serif;
@@ -38,7 +40,10 @@
       var quando = '';
       try { quando = localStorage.getItem('ultimoAggiornamento') || ''; } catch (e) {}
       stato.textContent = 'Senza connessione: stai vedendo la versione salvata' + (quando ? ' il ' + quando : '');
+      stato.style.opacity = '1';
       stato.style.display = 'block';
+      clearTimeout(window._nascondi);
+      window._nascondi = setTimeout(function () { stato.style.opacity = '0'; }, 8000);
     }
   }
   window.addEventListener('online', aggiornaStato);
