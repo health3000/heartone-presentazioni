@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#01238B">
+<title>HeartONE Farmacie</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  html, body { margin: 0; height: 100%; background: #01238B; }
+  iframe { border: 0; width: 100%; height: 100%; display: block; }
+  #stato {
+    position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    transform: translateX(-50%);
+    background: #01238B; color: #fff; border: 2px solid #EF2F7E;
+    font: 500 14px/1.3 "Encode Sans", Arial, sans-serif;
+    padding: 8px 14px; border-radius: 999px; display: none; z-index: 10;
+    max-width: 90vw; text-align: center;
+  }
+</style>
+</head>
+<body>
+<iframe src="heartone-farmacie.html" title="HeartONE Farmacie"></iframe>
+<div id="stato" role="status"></div>
+<script>
+  // Salva la presentazione sul tablet per poterla aprire anche senza connessione.
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(function () {});
+  }
+  var stato = document.getElementById('stato');
+  function aggiornaStato() {
+    if (navigator.onLine) {
+      stato.style.display = 'none';
+      try { localStorage.setItem('ultimoAggiornamento', new Date().toLocaleString('it-IT')); } catch (e) {}
+    } else {
+      var quando = '';
+      try { quando = localStorage.getItem('ultimoAggiornamento') || ''; } catch (e) {}
+      stato.textContent = 'Senza connessione: stai vedendo la versione salvata' + (quando ? ' il ' + quando : '');
+      stato.style.display = 'block';
+    }
+  }
+  window.addEventListener('online', aggiornaStato);
+  window.addEventListener('offline', aggiornaStato);
+  aggiornaStato();
+</script>
+</body>
+</html>
